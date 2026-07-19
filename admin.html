@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Admin — Orjun</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body data-theme="dark">
+
+<!-- LOGIN -->
+<div class="admin-login" id="admin-login">
+  <form id="login-form" class="login-card">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <h1>Admin Access</h1>
+    <p class="login-sub">Sign in with your administrator account.</p>
+    <input type="email" id="login-email" placeholder="Email" required autocomplete="username" />
+    <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password" />
+    <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Sign in</button>
+    <p class="login-error" id="login-error"></p>
+  </form>
+</div>
+
+<!-- DASHBOARD -->
+<div class="admin-shell" id="admin-shell" hidden>
+  <aside class="admin-sidebar">
+    <div class="brand" style="padding:0 0 20px;"><span class="brand-mark"></span><span class="brand-name">Orjun · Admin</span></div>
+    <nav class="admin-nav">
+      <button class="admin-nav-btn active" data-panel="overview">Dashboard</button>
+      <button class="admin-nav-btn" data-panel="albums">Albums &amp; Media</button>
+      <button class="admin-nav-btn" data-panel="journal">Journal</button>
+      <button class="admin-nav-btn" data-panel="timeline">Life Journey</button>
+      <button class="admin-nav-btn" data-panel="about">About Me</button>
+      <button class="admin-nav-btn" data-panel="homepage">Homepage &amp; Featured</button>
+      <button class="admin-nav-btn" data-panel="categories">Categories</button>
+      <button class="admin-nav-btn" data-panel="settings">Settings</button>
+    </nav>
+    <button class="btn btn-ghost" id="logout-btn" style="margin-top:auto;">Logout</button>
+  </aside>
+
+  <main class="admin-main">
+
+    <!-- OVERVIEW -->
+    <section class="admin-panel" id="panel-overview">
+      <h2>Dashboard</h2>
+      <div class="stat-cards">
+        <div class="stat-card"><span class="sc-num" id="sc-albums">0</span><span class="sc-label">Albums</span></div>
+        <div class="stat-card"><span class="sc-num" id="sc-media">0</span><span class="sc-label">Photos &amp; Videos</span></div>
+        <div class="stat-card"><span class="sc-num" id="sc-journal">0</span><span class="sc-label">Journal Entries</span></div>
+        <div class="stat-card"><span class="sc-num" id="sc-visitors">0</span><span class="sc-label">Visitors</span></div>
+        <div class="stat-card"><span class="sc-num" id="sc-storage">—</span><span class="sc-label">Storage Used</span></div>
+      </div>
+      <h3 class="admin-subhead">Recent uploads</h3>
+      <div class="recent-grid" id="recent-uploads"></div>
+    </section>
+
+    <!-- ALBUMS -->
+    <section class="admin-panel" id="panel-albums" hidden>
+      <div class="panel-head">
+        <h2>Albums &amp; Media</h2>
+        <button class="btn btn-primary" id="new-album-btn">+ New Album</button>
+      </div>
+      <div class="admin-album-grid" id="admin-album-grid"></div>
+
+      <div id="admin-album-detail" hidden>
+        <button class="back-link" id="admin-album-back">&larr; All albums</button>
+        <div class="panel-head">
+          <h2 id="admin-album-title"></h2>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-ghost small" id="rename-album-btn">Rename</button>
+            <button class="btn btn-ghost small" id="delete-album-btn">Delete album</button>
+          </div>
+        </div>
+        <div class="dropzone" id="dropzone">
+          <p>Drag &amp; drop photos or videos here, or click to choose files. Bulk upload supported.</p>
+          <input type="file" id="file-input" multiple accept="image/*,video/*" hidden />
+          <div class="upload-progress" id="upload-progress"></div>
+        </div>
+        <div class="admin-media-grid" id="admin-media-grid"></div>
+      </div>
+    </section>
+
+    <!-- JOURNAL -->
+    <section class="admin-panel" id="panel-journal" hidden>
+      <div class="panel-head">
+        <h2>Journal</h2>
+        <button class="btn btn-primary" id="new-entry-btn">+ New Entry</button>
+      </div>
+      <div class="admin-list" id="admin-journal-list"></div>
+
+      <div class="editor-modal" id="journal-editor" hidden>
+        <div class="editor-card">
+          <input type="text" id="je-title" placeholder="Entry title" />
+          <div class="editor-row">
+            <input type="date" id="je-date" />
+            <input type="text" id="je-mood" placeholder="Mood (e.g. 🙂)" style="max-width:140px;" />
+            <input type="text" id="je-weather" placeholder="Weather" style="max-width:160px;" />
+            <label class="pin-check"><input type="checkbox" id="je-pinned" /> Pinned</label>
+          </div>
+          <input type="text" id="je-tags" placeholder="Tags, comma separated" />
+          <textarea id="je-content" rows="10" placeholder="Write in Markdown…"></textarea>
+          <p class="autosave-note" id="je-autosave-note"></p>
+          <div class="editor-actions">
+            <button class="btn btn-ghost" id="je-cancel">Cancel</button>
+            <button class="btn btn-ghost" id="je-delete" hidden>Delete</button>
+            <button class="btn btn-primary" id="je-save">Save entry</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="admin-panel" id="panel-timeline" hidden>
+      <div class="panel-head">
+        <h2>Life Journey</h2>
+        <button class="btn btn-primary" id="new-milestone-btn">+ New Milestone</button>
+      </div>
+      <div class="admin-list" id="admin-timeline-list"></div>
+
+      <div class="editor-modal" id="timeline-editor" hidden>
+        <div class="editor-card">
+          <input type="date" id="tl-date" />
+          <input type="text" id="tl-title" placeholder="Milestone title" />
+          <textarea id="tl-desc" rows="5" placeholder="Description"></textarea>
+          <div class="editor-actions">
+            <button class="btn btn-ghost" id="tl-cancel">Cancel</button>
+            <button class="btn btn-ghost" id="tl-delete" hidden>Delete</button>
+            <button class="btn btn-primary" id="tl-save">Save milestone</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="admin-panel" id="panel-about" hidden>
+      <h2>About Me</h2>
+      <div class="editor-card static">
+        <label class="field-label">Portrait photo</label>
+        <input type="file" id="about-photo-input" accept="image/*" />
+        <label class="field-label">Bio</label>
+        <textarea id="about-bio-input" rows="6"></textarea>
+        <label class="field-label">Goals (one per line)</label>
+        <textarea id="about-goals-input" rows="4"></textarea>
+        <label class="field-label">Achievements (one per line)</label>
+        <textarea id="about-ach-input" rows="4"></textarea>
+        <button class="btn btn-primary" id="about-save-btn">Save About Me</button>
+      </div>
+    </section>
+
+    <!-- HOMEPAGE / FEATURED -->
+    <section class="admin-panel" id="panel-homepage" hidden>
+      <h2>Homepage &amp; Featured Memories</h2>
+      <div class="editor-card static">
+        <label class="field-label">Hero subtitle</label>
+        <input type="text" id="home-subtitle-input" />
+        <button class="btn btn-primary" id="home-save-btn">Save homepage</button>
+      </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="admin-panel" id="panel-categories" hidden>
+      <h2>Categories</h2>
+      <div class="editor-row">
+        <input type="text" id="new-category-input" placeholder="New category name" />
+        <button class="btn btn-primary" id="add-category-btn">Add</button>
+      </div>
+      <div class="admin-list" id="admin-category-list"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="admin-panel" id="panel-settings" hidden>
+      <h2>Settings</h2>
+      <div class="editor-card static">
+        <label class="field-label">Site title</label>
+        <input type="text" id="settings-title-input" />
+        <label class="field-label">Ambient music URL</label>
+        <input type="text" id="settings-music-input" placeholder="https://…mp3" />
+        <button class="btn btn-primary" id="settings-save-btn">Save settings</button>
+        <p class="autosave-note">Visitor counter: <span id="settings-visitor-count">0</span></p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>
